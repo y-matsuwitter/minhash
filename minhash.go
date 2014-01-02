@@ -10,6 +10,7 @@ import (
 )
 
 var bitMask = uint32(0x1)
+var hashFuncNum = 128
 
 func minKey(l map[string]uint32) (string, uint32) {
 	var result string
@@ -35,7 +36,7 @@ func minHash(data []string, seed uint32) uint32 {
 func signature(data []string) uint32 {
 	rand.Seed(1)
 	sig := uint32(0)
-	for i := 0; i < 128; i++ {
+	for i := 0; i < hashFuncNum; i++ {
 		sig += (minHash(data, rand.Uint32()) & bitMask) << uint32(i)
 	}
 	return sig
@@ -44,7 +45,7 @@ func signature(data []string) uint32 {
 func signatureBig(data []string) *big.Int {
 	rand.Seed(1)
 	sigBig := big.NewInt(0)
-	for i := 0; i < 128; i++ {
+	for i := 0; i < hashFuncNum; i++ {
 		sigBig.SetBit(sigBig, i, uint(minHash(data, rand.Uint32())&bitMask))
 	}
 	return sigBig
@@ -66,26 +67,8 @@ func popCountBig(bits *big.Int) int {
 	return result
 }
 
-func calcJaccard(v1, v2 []string) float32 {
+func Minhash(v1, v2 []string) float32 {
 	commonBig := big.NewInt(0)
 	commonBig.Xor(signatureBig(v1), signatureBig(v2))
-	return 2.0 * (float32((128.0-popCountBig(commonBig)))/128.0 - 0.5)
-}
-
-func bench(label string, f func()) {
-	now := time.Now()
-	f()
-	fmt.Println(label, ":", time.Now().Sub(now))
-}
-
-func calc() {
-	calcJaccard([]string{
-		"巨人", "中井", "左膝", "靭帯", "損傷", "登録", "抹消",
-	}, []string{
-		"中井", "左膝", "登録", "抹消", "歩行", "問題",
-	})
-}
-
-func main() {
-	bench("jaccard", calc)
+	return 2.0 * (float32((hashFuncNum-popCountBig(commonBig)))/float32(hashFuncNum) - 0.5)
 }
