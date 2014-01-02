@@ -1,4 +1,4 @@
-package mmh
+package main
 
 import (
 	"bytes"

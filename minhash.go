@@ -1,7 +1,6 @@
 package main
 
 import (
-	"./mmh"
 	"fmt"
 	"math"
 	"math/big"
