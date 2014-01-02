@@ -30,15 +30,6 @@ func minHash(data []string, seed uint32) uint32 {
 	return value
 }
 
-func signatureInt32(data []string) uint32 {
-	rand.Seed(1)
-	sig := uint32(0)
-	for i := 0; i < hashFuncNum; i++ {
-		sig += (minHash(data, rand.Uint32()) & bitMask) << uint32(i)
-	}
-	return sig
-}
-
 func Signature(data []string) *big.Int {
 	rand.Seed(1)
 	sigBig := big.NewInt(0)
