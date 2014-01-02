@@ -30,7 +30,7 @@ func minHash(data []string, seed uint32) uint32 {
 	return value
 }
 
-func signature(data []string) uint32 {
+func signatureInt32(data []string) uint32 {
 	rand.Seed(1)
 	sig := uint32(0)
 	for i := 0; i < hashFuncNum; i++ {
@@ -39,7 +39,7 @@ func signature(data []string) uint32 {
 	return sig
 }
 
-func signatureBig(data []string) *big.Int {
+func Signature(data []string) *big.Int {
 	rand.Seed(1)
 	sigBig := big.NewInt(0)
 	for i := 0; i < hashFuncNum; i++ {
@@ -64,8 +64,12 @@ func popCountBig(bits *big.Int) int {
 	return result
 }
 
-func Minhash(v1, v2 []string) float32 {
+func MinhashFromSignature(sig1, sig2 *big.Int) float32 {
 	commonBig := big.NewInt(0)
-	commonBig.Xor(signatureBig(v1), signatureBig(v2))
+	commonBig.Xor(sig1, sig2)
 	return 2.0 * (float32((hashFuncNum-popCountBig(commonBig)))/float32(hashFuncNum) - 0.5)
+}
+
+func Minhash(v1, v2 []string) float32 {
+	return MinhashFromSignature(Signature(v1), Signature(v2))
 }
