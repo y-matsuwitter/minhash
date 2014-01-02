@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"math"
 	"math/big"
 	"math/rand"
-	"time"
 )
 
 var bitMask = uint32(0x1)
@@ -26,7 +24,7 @@ func minKey(l map[string]uint32) (string, uint32) {
 func minHash(data []string, seed uint32) uint32 {
 	vector := make(map[string]uint32)
 	for k := range data {
-		vector[data[k]] = mmh.Murmurhash3_32(data[k], seed)
+		vector[data[k]] = Murmurhash3_32(data[k], seed)
 	}
 	_, value := minKey(vector)
 	return value
