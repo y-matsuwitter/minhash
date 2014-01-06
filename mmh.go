@@ -43,7 +43,6 @@ func Murmurhash3_32(key string, seed uint32) uint32 {
 		h1 = h1*5 + 0xe6546b64
 	}
 
-	// 4バイトブロック外の最後のデータを反映する
 	var k1 uint32 = 0
 	tail := nblocks * 4
 	switch length & 3 {
@@ -55,10 +54,10 @@ func Murmurhash3_32(key string, seed uint32) uint32 {
 		fallthrough
 	case 1:
 		k1 ^= uint32(keyBytes[tail])
-		k *= c1
-		k = rotl(k, 15)
-		k *= c2
-		h1 ^= k
+		k1 *= c1
+		k1 = rotl(k1, 15)
+		k1 *= c2
+		h1 ^= k1
 	}
 	// finalize
 	h1 ^= uint32(length)
